@@ -11,11 +11,13 @@ CONFIG += c++11
 SOURCES += \
     ball.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    racket.cpp
 
 HEADERS += \
     ball.h \
-    mainwindow.h
+    mainwindow.h \
+    racket.h
 
 FORMS += \
     mainwindow.ui

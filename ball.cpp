@@ -1,28 +1,70 @@
-#include <ball.h>
+#include "ball.h"
 #include <QTimer>
 #include <QPainter>
+#include <QKeyEvent>
+#include <QDebug>
+#include <QObject>
+#include <qrandom.h>
+#include <QLine>
+
+
 
 Ball::Ball(QObject *parent)
     : QObject(parent), QGraphicsEllipseItem()
 {
-    currentFrame = 0;
-    spriteImage = new QPixmap("C:\\Users\\ViP\\Documents\\Projects\\example\\explosion.png");
+    setRect(0,0,10,10);
+    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    srand(time(0));
+    _x = _acceleration*(qrand()%4-2); // -2, -1, 0, 1, 2
+    _y = _acceleration*(qrand()%4-2);
+    if ( abs(_y) > abs(_x))
+    {
+        swap(_x,_y);
+    }
+    if(_x == 0 )
+    {
+        _x = _acceleration;
+    }
 
-    timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, &Ball::nextFrame);
-    timer->start(25);
+
+
+
 }
 
-QRectF Ball::boundingRect() const {
-    return QRectF(-10, -10, 20, 20);
+void Ball::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Space) {
+        timer->start(15);
+        qDebug() << "keyevent";
+    }
+
 }
 
-void Ball::b_paint(QPainter *painter) {
-    painter->drawPixmap(-10, -10, *spriteImage, currentFrame, 0, 20, 20);
+
+
+void Ball::move()
+{
+    setPos(x() + _x , y() + _y);
+
+    if ((x() > 900)||(x() < 0))
+    {
+
+        _x = -_x;
+
+        setPos(x() + _x , y());
+
+    }
+    if ((y() > 600 ) || (y() < 0))
+    {
+
+        _y = -_y;
+        setPos(x()  , y() + _y);
+
+    }
+
+   // qDebug() << x() << " " << scenePos().x();
+
+
 }
 
-void Ball::nextFrame() {
-    currentFrame += 20;
-    if(currentFrame >= 300) currentFrame = 0;
-    this->update(-10, -10, 20, 20);
-}
+

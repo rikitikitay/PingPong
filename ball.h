@@ -3,23 +3,31 @@
 
 #include <QGraphicsEllipseItem>
 #include <QObject>
+#include <QKeyEvent>
+#include <QTimer>
+#include <QPair>
+#include <QTime>
+
+using namespace std;
+
+
 
 class Ball:  public QObject, public QGraphicsEllipseItem
 {
     Q_OBJECT
 public:
     Ball (QObject *parent = nullptr);
+    void keyPressEvent (QKeyEvent* e);
+    QTimer* timer = new QTimer();
 
-private slots:
-    void nextFrame();
+public slots:
+    void move();
 
 private:
-    void b_paint(QPainter *painter);
-    QRectF boundingRect() const;
 
-    QTimer *timer;
-    QPixmap *spriteImage;
-    int currentFrame;
+    int _x;
+    int _y;
+    int _acceleration = 10;
 };
 
 #endif // BALL_H
