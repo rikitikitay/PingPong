@@ -12,6 +12,8 @@
 #include <QDebug>
 #include <qrandom.h>
 #include <QLine>
+#include <QMatrix>
+#include <cmath>
 
 #include "racket.h"
 
@@ -26,8 +28,8 @@ public:
     Ball (QObject *parent = nullptr);
     void keyPressEvent (QKeyEvent* e) override;
     QPainterPath shape() const override;
-
-    bool collides(qreal, qreal);
+    bool collides();
+    QPointF normalizeVector(qreal,qreal);
 
 signals:
     void signalCollidingWall();
@@ -43,10 +45,14 @@ public slots:
 public:
     QTimer* timer = new QTimer();
      int _acceleration = 7;
+     Racket* racket;
+     qreal _x;
+     qreal _y;
 
 private:
-    int _x;
-    int _y;
+     bool _isCollidedWithRacket = false;
+     qreal _rotation = 0;
+
 
 };
 

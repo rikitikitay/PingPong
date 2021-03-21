@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QDebug>
 
+
+
 class Racket: public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
@@ -20,6 +22,10 @@ public:
     void keyPressEvent (QKeyEvent* e) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     QPainterPath shape() const override;
+    int getRacketSpeed()
+    {
+        return racketSpeed;
+    }
 
 
 public slots:
@@ -28,11 +34,12 @@ public slots:
 signals:
     void gameSignal();
 
+public:
+    int racketSpeed = 5;
+
 private:
     QTimer* _timer = new QTimer();
     QSet<int> _keysPressed;
-    int _racketSpeed = 10;
-
 
 };
 

@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QPainter>
 
-#include "racket.h"
 #include <ball.h>
 
 QT_BEGIN_NAMESPACE
