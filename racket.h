@@ -18,28 +18,25 @@ public:
         right
     };
     Racket();
-    Racket(Sight);
-    void keyPressEvent (QKeyEvent* e) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
+    Racket(Sight s);
     QPainterPath shape() const override;
-    int getRacketSpeed()
-    {
-        return racketSpeed;
-    }
+
 
 
 public slots:
-    void move();
+    //void move();
 
 signals:
     void gameSignal();
 
 public:
-    int racketSpeed = 5;
+    int racketSpeed = 12;
+    int sight = left;
+    QSet<int> _keysPressed;
 
 private:
     QTimer* _timer = new QTimer();
-    QSet<int> _keysPressed;
+
 
 };
 

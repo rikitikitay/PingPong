@@ -14,6 +14,7 @@
 #include <QLine>
 #include <QMatrix>
 #include <cmath>
+#include <QList>
 
 #include "racket.h"
 
@@ -27,6 +28,7 @@ class Ball:  public QObject, public QGraphicsEllipseItem
 public:
     Ball (QObject *parent = nullptr);
     void keyPressEvent (QKeyEvent* e) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     QPainterPath shape() const override;
     bool collides();
     QPointF normalizeVector(qreal,qreal);
@@ -34,6 +36,7 @@ public:
 signals:
     void signalCollidingWall();
     void signalCollidingRacket();
+    void signalStartGame();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -44,14 +47,16 @@ public slots:
 
 public:
     QTimer* timer = new QTimer();
-     int _acceleration = 7;
-     Racket* racket;
-     qreal _x;
-     qreal _y;
+    int _acceleration = 2;
+    QList<Racket*> racket;
+
+
+    qreal _x;
+    qreal _y;
 
 private:
-     bool _isCollidedWithRacket = false;
-     qreal _rotation = 0;
+    bool _isCollidedWithRacket = false;
+    qreal _rotation = 0;
 
 
 };

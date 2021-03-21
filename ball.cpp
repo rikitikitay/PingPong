@@ -23,6 +23,8 @@ Ball::Ball(QObject *parent)
     QPointF bufPoint = normalizeVector(_x,_y);
     _x = bufPoint.x();
     _y = bufPoint.y();
+
+
     //_y = 0;
 }
 
@@ -39,7 +41,66 @@ void Ball::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space)
     {
-        timer->start(15);
+        timer->start(25);
+
+
+    }
+    for (auto i: racket)
+    {
+        if (i->sight == Racket::Sight::left)
+        {
+            switch (event->key())
+            {
+            case Qt::Key::Key_W:
+            case Qt::Key::Key_S:
+            {
+                i->_keysPressed += event->key();
+
+            }
+                break;
+            }
+        }
+        if (i->sight == Racket::Sight::right)
+            switch (event->key())
+            {
+            case Qt::Key::Key_Up:
+            case Qt::Key::Key_Down:
+            {
+                i->_keysPressed += event->key();
+            }
+                break;
+            }
+    }
+
+}
+
+void Ball::keyReleaseEvent(QKeyEvent *event)
+{
+    for (auto i: racket)
+    {
+        if (i->sight == Racket::Sight::left)
+        {
+            switch (event->key())
+            {
+            case Qt::Key::Key_W:
+            case Qt::Key::Key_S:
+            {
+                i->_keysPressed -= event->key();
+
+            }
+                break;
+            }
+        }
+        if (i->sight == Racket::Sight::right)
+            switch (event->key())
+            {
+            case Qt::Key::Key_Up:
+            case Qt::Key::Key_Down:
+            {
+                i->_keysPressed -= event->key();
+            }
+                break;
+            }
     }
 }
 
@@ -51,7 +112,7 @@ QRectF Ball::boundingRect() const
 QPainterPath Ball::shape() const
 {
     QPainterPath path;
-    path.addRect(boundingRect());
+    path.addEllipse(boundingRect());
     return path;
 }
 
@@ -61,7 +122,7 @@ bool Ball::collides()
     {
         if (dynamic_cast<Racket*>(item))
         {
-            //setPos(x,y);
+            signalCollidingRacket();
             return true; //racket
         }
     }
@@ -71,7 +132,7 @@ bool Ball::collides()
 void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(Qt::black);
-    painter->drawRect(boundingRect());
+    painter->drawEllipse(boundingRect());
 
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -81,33 +142,48 @@ void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Ball::move()
 {
+    signalStartGame();
     setPos(x() + _x , y() + _y);
     if (collides())
     {
-        signalCollidingRacket();
         _x = -_x;
-        _y = racket->racketSpeed+_y;
-        QPointF bufPoint = normalizeVector(_x,_y);
-        _x = bufPoint.x();
-        _y = bufPoint.y();
-        setPos(11 , y() + _y); // заменить 11
+
+        if (x() < 450)
+        {
+
+            _y = 2*((racket[0]->racketSpeed+1) / (abs(racket[0]->racketSpeed)+1)) +_y;
+            QPointF bufPoint = normalizeVector(_x,_y);
+            _x = bufPoint.x();
+            _y = bufPoint.y();
+            setPos(11 , y() + _y); // заменить 11
+        }
+        else
+        {
+
+            _y = 2*((racket[1]->racketSpeed+1) / (abs(racket[1]->racketSpeed)+1)) +_y; //
+            QPointF bufPoint = normalizeVector(_x,_y);
+            _x = bufPoint.x();
+            _y = bufPoint.y();
+            setPos(879 , y() + _y);
+        }
     }
     else
     {
         _isCollidedWithRacket = false;
-        if ((x() > 900) || (x() < 0))
+        if ((x() > 890) || (x() < 0))
         {
-            if (x() < 0)
+            if (x() < 0) //ты тут?
                 signalCollidingWall();
             _x = -_x;
-            qreal newX = (x() < 0) ? 0 : 900;
+            qreal newX = (x() < 0) ? 0 : 890;
             setPos(newX , y());
         }
-        if ((y() > 600 ) || (y() < 0))
+        if ((y() > 590 ) || (y() < 0))
         {
             _y = -_y;
-            qreal newY = (y() < 0) ? 0 : 600;
+            qreal newY = (y() < 0) ? 0 : 590;
             setPos(x()  , newY);
         }
     }
 }
+

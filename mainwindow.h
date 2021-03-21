@@ -30,11 +30,13 @@ public slots:
     void racketSlot();
     void wallSlot();
     void changeBallAcceleration();
+    void moveRackets();
 
 private:
     Ui::MainWindow *ui;
     Ball *ball;
-    int points = 0;
+    int points = 7;
+    QTimer *racketsTimer;
 
 };
 #endif // MAINWINDOW_H
