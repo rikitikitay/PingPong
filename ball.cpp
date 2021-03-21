@@ -4,11 +4,9 @@
 Ball::Ball(QObject *parent)
     : QObject(parent), QGraphicsEllipseItem()
 {
-    //setRect(0,0,10,10);
-    setRotation(_rotation);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
     srand(time(0));
-    _x = (qrand()%180-90); // -2, -1, 0, 1, 2
+    _x = (qrand()%180-90);
     _y = (qrand()%180-90);
 
     if ( abs(_y) > abs(_x)) // angle -pi/4 to pi/4 and  pi - (-pi/4)  to pi - pi/4
@@ -23,9 +21,6 @@ Ball::Ball(QObject *parent)
     QPointF bufPoint = normalizeVector(_x,_y);
     _x = bufPoint.x();
     _y = bufPoint.y();
-
-
-    //_y = 0;
 }
 
 QPointF Ball::normalizeVector(qreal x1, qreal y1)
@@ -42,8 +37,6 @@ void Ball::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Space)
     {
         timer->start(25);
-
-
     }
     for (auto i: racket)
     {
@@ -142,6 +135,7 @@ void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Ball::move()
 {
+
     signalStartGame();
     setPos(x() + _x , y() + _y);
     if (collides())
@@ -169,14 +163,10 @@ void Ball::move()
     }
     else
     {
-        _isCollidedWithRacket = false;
+
         if ((x() > 890) || (x() < 0))
         {
-            if (x() < 0) //ты тут?
-                signalCollidingWall();
-            _x = -_x;
-            qreal newX = (x() < 0) ? 0 : 890;
-            setPos(newX , y());
+            signalCollidingWall();
         }
         if ((y() > 590 ) || (y() < 0))
         {
@@ -185,5 +175,10 @@ void Ball::move()
             setPos(x()  , newY);
         }
     }
+}
+
+Ball::~Ball()
+{
+    timer->deleteLater();
 }
 

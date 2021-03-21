@@ -27,6 +27,7 @@ class Ball:  public QObject, public QGraphicsEllipseItem
     Q_OBJECT
 public:
     Ball (QObject *parent = nullptr);
+    ~Ball();
     void keyPressEvent (QKeyEvent* e) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     QPainterPath shape() const override;
@@ -47,18 +48,11 @@ public slots:
 
 public:
     QTimer* timer = new QTimer();
-    int _acceleration = 2;
+    int _acceleration = 10;
     QList<Racket*> racket;
-
 
     qreal _x;
     qreal _y;
-
-private:
-    bool _isCollidedWithRacket = false;
-    qreal _rotation = 0;
-
-
 };
 
 #endif // BALL_H

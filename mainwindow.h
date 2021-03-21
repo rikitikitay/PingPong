@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QDebug>
 #include <QPainter>
+#include <QLabel>
+#include <QFont>
 
 #include <ball.h>
 
@@ -22,21 +24,18 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 signals:
+    void signalGoal();
 
 public slots:
-    void ballSlot();
-    void racketSlot();
-    void wallSlot();
     void changeBallAcceleration();
     void moveRackets();
 
 private:
     Ui::MainWindow *ui;
     Ball *ball;
-    int points = 7;
+    QList<int> points = {0,0};
     QTimer *racketsTimer;
-
+    QLabel *score;
 };
 #endif // MAINWINDOW_H
