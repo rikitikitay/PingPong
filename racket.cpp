@@ -1,17 +1,11 @@
 #include "racket.h"
-#include <QGraphicsRectItem>
-#include <QDebug>
-
 
 Racket::Racket()
 {
-    setRect(0,0,5,50);
+    setRect(0,0,5,100);
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
-    timer->start(25);
-
-
-
+    connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
+    _timer->start(25);
 }
 
 Racket::Racket(Racket::Sight)
@@ -19,22 +13,27 @@ Racket::Racket(Racket::Sight)
 
 }
 
+QPainterPath Racket::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    return path;
+}
+
 void Racket::move()
 {
-    for (auto key: keysPressed)
+    for (auto key: _keysPressed)
     {
         switch(key)
         {
-        case Qt::Key::Key_Down:
         case Qt::Key::Key_S:
         {
-            moveBy(0,10);
+            moveBy(0,_racketSpeed);
         }
             break;
         case Qt::Key::Key_W:
-        case Qt::Key::Key_Up:
         {
-            moveBy(0,-10);
+            moveBy(0,-_racketSpeed);
         }
             break;
         case Qt::Key::Key_Space:
@@ -43,18 +42,16 @@ void Racket::move()
         }
             break;
         }
-
-
     }
 }
 
 void Racket::keyPressEvent(QKeyEvent *e)
 {
-    keysPressed += e->key();
+    _keysPressed += e->key();
 }
 
 void Racket::keyReleaseEvent(QKeyEvent *e)
 {
-    keysPressed -= e->key();
+    _keysPressed -= e->key();
 }
 

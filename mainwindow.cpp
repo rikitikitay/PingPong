@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QTimer>
-#include <QDebug>
-#include <QPainter>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -19,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ball->setPos(455,295);
     ball->setFlag(QGraphicsItem::ItemIsFocusable);
     ball->setFocus();
+
     Racket* racket = new Racket();
     scene->addItem(racket);
     racket->setPos(0,275);
@@ -39,7 +34,13 @@ MainWindow::MainWindow(QWidget *parent)
     scene->addLine(line);
 
     connect(racket, &Racket::gameSignal, this, &MainWindow::ballSlot);
+    connect(ball, &Ball::signalCollidingRacket, this, &MainWindow::racketSlot);
+    connect(ball, &Ball::signalCollidingWall, this, &MainWindow::wallSlot);
 
+    QTimer *ballAccTimer = new QTimer();
+    connect(ballAccTimer, SIGNAL(timeout()), this, SLOT(changeBallAcceleration()));
+    ballAccTimer->setInterval(60000);
+    ballAccTimer->start(25);
 }
 
 
@@ -51,4 +52,21 @@ MainWindow::~MainWindow()
 void MainWindow::ballSlot()
 {
     ball->timer->start(20);
+}
+
+void MainWindow::racketSlot()
+{
+    points++;
+}
+
+void MainWindow::wallSlot()
+{
+    points--;
+}
+
+void MainWindow::changeBallAcceleration()
+{
+    ball->_acceleration += points;
+    qDebug() << "acceleration " << ball->_acceleration;
+
 }
