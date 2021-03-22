@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QLabel>
 #include <QFont>
+#include <QSoundEffect>
 
 #include <ball.h>
 
@@ -37,5 +38,11 @@ private:
     QList<int> points = {0,0};
     QTimer *racketsTimer;
     QLabel *score;
+
+    QSoundEffect *soundStart = new QSoundEffect();
+    QSoundEffect *soundRebound = new QSoundEffect();
+    QSoundEffect *soundSuccess = new QSoundEffect();
+    QSoundEffect *soundWall = new QSoundEffect();
+
 };
 #endif // MAINWINDOW_H

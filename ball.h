@@ -6,13 +6,10 @@
 #include <QObject>
 #include <QKeyEvent>
 #include <QTimer>
-#include <QPair>
 #include <QTime>
 #include <QPainter>
 #include <QDebug>
 #include <qrandom.h>
-#include <QLine>
-#include <QMatrix>
 #include <cmath>
 #include <QList>
 
@@ -35,9 +32,11 @@ public:
     QPointF normalizeVector(qreal,qreal);
 
 signals:
-    void signalCollidingWall();
+    void signalGoal();
     void signalCollidingRacket();
     void signalStartGame();
+    void signalSpace();
+    void signalHorizontalWall();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

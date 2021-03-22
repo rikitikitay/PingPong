@@ -53,8 +53,37 @@ MainWindow::MainWindow(QWidget *parent)
     score->setAlignment(Qt::AlignCenter);
     score->show();
 
-    connect(ball, &Ball::signalCollidingWall, [=]()
+    soundStart->setSource(QUrl::fromLocalFile(":/sound/start.wav"));
+    soundStart->setLoopCount(1);
+    soundStart->setVolume(1);
+
+    soundRebound->setSource(QUrl::fromLocalFile(":/sound/rebound.wav"));
+    soundRebound->setLoopCount(1);
+    soundRebound->setVolume(1);
+
+    soundSuccess->setSource(QUrl::fromLocalFile(":/sound/success.wav"));
+    soundSuccess->setLoopCount(1);
+    soundSuccess->setVolume(1);
+
+    soundWall->setSource(QUrl::fromLocalFile(":/sound/startGame.wav"));
+    soundWall->setLoopCount(1);
+    soundWall->setVolume(1);
+
+
+    connect(ball, &Ball::signalSpace,[=]()
     {
+        ball->timer->start(25);
+        soundStart->play();
+    });
+
+    connect(ball, &Ball::signalHorizontalWall, [=]()
+    {
+        soundWall->play();
+    });
+
+    connect(ball, &Ball::signalGoal, [=]()
+    {
+        soundSuccess->play();
         if (ball->x() > 450)
         {
             points[0]++;
@@ -72,6 +101,11 @@ MainWindow::MainWindow(QWidget *parent)
             score->setText(QString::number(points[0])+colon+QString::number(points[1]));
         }
         signalGoal();
+    });
+
+    connect(ball, &Ball::signalCollidingRacket, [=]()
+    {
+        soundRebound->play();
     });
 
     connect(this, &MainWindow::signalGoal, [=]()

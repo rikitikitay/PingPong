@@ -1,6 +1,5 @@
 #include "ball.h"
 
-
 Ball::Ball(QObject *parent)
     : QObject(parent), QGraphicsEllipseItem()
 {
@@ -36,7 +35,9 @@ void Ball::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space)
     {
-        timer->start(25);
+        if (!timer->isActive())
+            signalSpace();
+        //timer->start(25);
     }
     for (auto i: racket)
     {
@@ -131,8 +132,6 @@ void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(widget);
 }
 
-
-
 void Ball::move()
 {
 
@@ -166,10 +165,11 @@ void Ball::move()
 
         if ((x() > 890) || (x() < 0))
         {
-            signalCollidingWall();
+            signalGoal();
         }
         if ((y() > 590 ) || (y() < 0))
         {
+            signalHorizontalWall();
             _y = -_y;
             qreal newY = (y() < 0) ? 0 : 590;
             setPos(x()  , newY);
