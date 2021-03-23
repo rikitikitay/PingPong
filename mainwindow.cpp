@@ -5,13 +5,18 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    QGraphicsScene* scene = new QGraphicsScene(); // created a scene
 
+    QCoreApplication::instance()->installEventFilter(this);
+
+    //this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
+    QGraphicsScene* scene = new QGraphicsScene(); // created a scene
     ball = new Ball();
+
+
     scene->addItem(ball);
     ball->setPos(445,295);
-    ball->setFlag(QGraphicsItem::ItemIsFocusable);
-    ball->setFocus();
+   // ball->setFlag(QGraphicsItem::ItemIsFocusable);
+    //ball->setFocus();
 
     ball->racket.push_back(new Racket(Racket::Sight::left));
     ball->racket.push_back(new Racket(Racket::Sight::right));
@@ -177,4 +182,20 @@ void MainWindow::moveRackets()
             }
         }
     }
+}
+
+bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+    if ( !dynamic_cast<QInputEvent*>( event ) )
+    return false;
+
+    if (event->type() ==  QEvent::MouseButtonPress)
+    {
+        //qDebug() << "pop";
+        ball->setFlag(QGraphicsItem::ItemIsFocusable);
+        ball->setFocus();
+        return true;
+    }
+    return false;
+
 }

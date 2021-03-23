@@ -11,6 +11,7 @@
 #include <QFont>
 #include <QSoundEffect>
 
+
 #include <ball.h>
 
 QT_BEGIN_NAMESPACE
@@ -24,6 +25,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    bool eventFilter(QObject *target, QEvent *event);
+
 
 signals:
     void signalGoal();
